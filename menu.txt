@@ -1,0 +1,76 @@
+1.项目背景
+      1.1.新学期高校选修课或“引爆”服务器,网站不给力怎么办?
+      1.2.新生开学季，也是每个新学期开始选修课程的时候，很多高校学生都曾抱怨过，
+在大家扎堆选课，网站又不给力的情况下，要选上自己心仪的课程真是比登天还难。
+经常在选课的过程中，因为网站太卡，或者瞬间访问量太大导致服务器瘫痪的情祝的发生。
+这不仅让学生吐槽千万遍，更让信息中心背负着不给力的负面形象_高校网站群。
+      1.3.那么，这种情况可以解决吗?该怎么解决呢?
+首先，这种因为同一时间网站访问量激增导致服务器无法负担的情况，
+有一个专业术语叫“高负载高压力”。简单解释,
+就是一个网站在短时间内收到来自多个客户端(浏览器)大数据量的并发请求或是某个时刻同时访问系统的用户人数很多
+，也可以是同时在线处理的数据太大，超过了网站正常负荷，这种情况通常会暴露网站有缺陷的功能或其他系统问题，
+严重的直接会引发网站访问故障、服务器宕机等问题_中职网站群。
+      1.4.应用服务器部署。
+根据应用服务器的性能和并发访问量的大小，适当规划应用服务器的数量，最好能有一定的冗余。
+在高并发访问峰期间，可以适当增加某些关键应用的服务器数量_博达教师个人主页系统。
+      1.5.数据库集群技术。
+网站遭受大规模的集中访问时，在数据库层面也会出现高并发访问的情况。可以借鉴0racle数据库解决并发访问所采用的是RAC集群技术。
+RAC采用并行服务器运行方式:在两台(或多台)服务器上各自运行一个数据库核心进程，但共同管理和操作同一个数据库文件，该数据库文件存放在共享的网络存储上。
+客户端无论连接到哪个服务器上都可以对数据库进行操作，这样提高了数据库的高可靠性_博达中小学网站群。
+
+2.项目介绍
+本项目采用nginx+jboss+redis+sqlserver+spring+mybaits+springmvc架构完成。
+nginx用于jboss的热部署和反向代理服务。
+jboss发布javaweb项目和处理请求。
+redis作为高并发选课请求时的临时数据库。
+sqlserver是保存原始数据的数据库。
+spring是项目的总体框架。
+mybaits是项目与sqlserver的框架。
+springmvc是javaweb mvc架构打的框架。
+配置好文件后。
+在java resource的src/main/java下保存了具体的后台逻辑代码。
+src/main/resource 下保存了项目的配置文件
+在webapp下保存了前端jsp界面和js配置文件。
+controller：控制台代码
+mapper：数据库代码
+pojo：数据库对应的实体类
+Main：jedis的实体类
+sevice：中间代理，用于对sql方法语句进行加工，供controller调用
+converter：日期格式转换器
+	1.首先在mapper下有mybaits对应的接口和xml文件，xml文件中写了具体的sql语句，接口是为了让java代码可以直接调用sql语句。
+	2.根本我们的需求在sqlserver数据库里面查到我们需要的数据，把sql语句写道mapper下对应的xml文件中。
+	3.service中用spring的bean注入，注入mapper中的所有表对应的接口。调用用到的mapper里面用到的查询方法。
+	4..controller中实现具体的逻辑需求。
+		4.1 controller类中注入service，
+//找到已开课程信息 找不到是因为查询学期为19-20-1  数据库中数据为空 
+				List<VJwGgxx> allclasses=scimp.findAllClassses(xq);
+				//List<VJwGgxx> allclasses=scimp.findAllClassses();
+				//放入可选课程信息的 kcxh 和  xxrs
+				for (VJwGgxx vj : allclasses) {
+					redisUtil.set(String.valueOf(vj.getKcxh())+"xxrs",vj.getXxrs(),2592000);      // kcxh + "xxrs"
+				}
+		// 查询所有在校学生的xh 保存
+		List<String> allxh=scimp.findAllXh();
+		for (String xh : allxh) {
+			Map<String, Object> map=new HashMap<String, Object>();
+			xh=xh.replace(" ", "");
+		//找到以前成绩和类别
+			List<VJwCjGgxx> befclass=scimp.findBefSelect(xh);
+			map.put("befclass",befclass);
+			redisUtil.hmset(xh+"befclass", map,2592000);   //   xh + befclass
+			map.clear();
+			System.out.println("===="+xh+"========="+xq+"====");
+		
+		
+		//找到学生可选的课程保存
+			List<VJwGgxx> stuclasses=scimp.findClasses(xh, xq);
+			map.put("nowclass",stuclasses);
+			redisUtil.hmset(xh+"nowclass", map,2592000);
+		}	
+		// 将每个学生的选课权限，每个学生的以前选课信息，学校已开课程信息，所有学生可选课程信息，保存进入redis，准备工作第一步完成。
+
+
+
+
+
+3.项目进度
