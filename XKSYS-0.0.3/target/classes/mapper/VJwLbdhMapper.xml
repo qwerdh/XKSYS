@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.VJwLbdhMapper">
+    <select id="findBefSelect"   parameterType="string" resultType="string" >
+	select v_jw_lbdh.lbmc
+	from v_jw_cj_ggxx,v_jw_lbdh where xh=#{xh} and kclb like 'E1_' and 
+	v_jw_lbdh.lbdh=v_jw_cj_ggxx.kclb and (v_jw_cj_ggxx.kscj>='60' or v_jw_cj_ggxx.kscj='100')
+   </select>
+</mapper>
