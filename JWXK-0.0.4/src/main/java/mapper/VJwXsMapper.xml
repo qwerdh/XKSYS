@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.VJwXsMapper" >
+  <resultMap id="BaseResultMap" type="pojo.VJwXs" >
+    <result column="nj" property="nj" jdbcType="DOUBLE" />
+    <result column="bh" property="bh" jdbcType="CHAR" />
+    <result column="bj" property="bj" jdbcType="CHAR" />
+    <result column="xh" property="xh" jdbcType="CHAR" />
+    <result column="xm" property="xm" jdbcType="CHAR" />
+    <result column="xb" property="xb" jdbcType="CHAR" />
+    <result column="xbdm" property="xbdm" jdbcType="CHAR" />
+    <result column="xbmc" property="xbmc" jdbcType="CHAR" />
+    <result column="zydm" property="zydm" jdbcType="CHAR" />
+    <result column="zymc" property="zymc" jdbcType="CHAR" />
+    <result column="xjqkdm" property="xjqkdm" jdbcType="INTEGER" />
+    <result column="xjqk" property="xjqk" jdbcType="CHAR" />
+  </resultMap>
+  
+  <select id="findNj" parameterType="string" resultType="double">
+  select nj from v_jw_xs where xh=#{xh};
+  </select>
+  
+  <select id="findXm" parameterType="string" resultType="string">
+  select xm from v_jw_xs where xh=#{xh};
+  </select>
+  <select id="findstu"  parameterType="string" resultType="pojo.VJwXs">
+  SELECT xh,xm,bj from v_jw_xs where xh=#{0}
+  </select>
+</mapper>

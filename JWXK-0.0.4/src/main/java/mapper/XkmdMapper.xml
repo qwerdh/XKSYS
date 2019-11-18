@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.XkmdMapper" >
+  <resultMap id="BaseResultMap" type="pojo.Xkmd" >
+    <id column="idn" property="idn" jdbcType="INTEGER" />
+    <result column="xq" property="xq" jdbcType="CHAR" />
+    <result column="xh" property="xh" jdbcType="CHAR" />
+    <result column="bh" property="bh" jdbcType="CHAR" />
+    <result column="bj" property="bj" jdbcType="CHAR" />
+    <result column="xm" property="xm" jdbcType="CHAR" />
+    <result column="kcdm" property="kcdm" jdbcType="CHAR" />
+    <result column="kcmc" property="kcmc" jdbcType="CHAR" />
+    <result column="lbdh" property="lbdh" jdbcType="CHAR" />
+    <result column="zc" property="zc" jdbcType="INTEGER" />
+    <result column="jc1" property="jc1" jdbcType="INTEGER" />
+    <result column="jc2" property="jc2" jdbcType="INTEGER" />
+    <result column="tx" property="tx" jdbcType="BIT" />
+    <result column="jcqk" property="jcqk" jdbcType="BIT" />
+    <result column="jcdm" property="jcdm" jdbcType="CHAR" />
+    <result column="kcxh" property="kcxh" jdbcType="INTEGER" />
+    <result column="kcidn" property="kcidn" jdbcType="INTEGER" />
+    <result column="czzs" property="czzs" jdbcType="INTEGER" />
+    <result column="czrq" property="czrq" jdbcType="TIMESTAMP" />
+    <result column="xkzs" property="xkzs" jdbcType="INTEGER" />
+    <result column="xkrq" property="xkrq" jdbcType="TIMESTAMP" />
+  </resultMap>
+	 <insert id="save" parameterType="pojo.Xkmd">
+		insert into xkmd(xh,xq,kcxh,xkrq,tx,kcmc) 
+		values (#{xh},#{xq},#{kcxh},#{xkrq},#{tx},#{kcmc})
+	</insert>
+	<select id="findnumber" parameterType="Integer" resultType="Integer">
+	select count(*) from xkmd where kcxh=#{kcxh} and tx='false'
+	</select>
+	<select id="findNowClass" parameterType="string"  resultType="pojo.Xkmd">
+	select kcmc from xkmd where xh=#{0} and xq=#{1} and tx='false'
+	</select>
+	<update id="TxClass" >
+	UPDATE xkmd SET tx='true',czrq=#{3} WHERE xh=#{0} and xq=#{1} and kcmc=#{2};
+	</update>
+</mapper>
